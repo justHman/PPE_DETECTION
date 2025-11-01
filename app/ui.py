@@ -20,7 +20,7 @@ from backend import (
 # ============ Cấu hình trang ============
 st.set_page_config(
     page_title="PPE Detection System",
-    page_icon="🦺",
+    page_icon="👷",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -44,7 +44,7 @@ if 'stop_detection' not in st.session_state:
 # ============ Header ============
 st.markdown("""
     <h1 style='text-align: center; margin-bottom: 0;'>
-        🦺 Personal Protective Equipment Detection
+        ---Personal Protective Equipment Detection---
     </h1>
 """, unsafe_allow_html=True)
 

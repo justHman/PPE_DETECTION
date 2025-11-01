@@ -59,7 +59,7 @@ while cap.isOpened():
         break
 
     # === Chạy YOLO detect trên frame ===
-    results = model(frame, verbose=False)[0]
+    results = model(frame, verbose=False, conf=0.2)[0]
     frame = results.plot()
 
     boxes = results.boxes.xyxy.cpu().numpy()
