@@ -243,7 +243,7 @@ with col2:
                     frame,
                     channels="RGB",
                     width="stretch",
-                    caption=f"PPE Detection - Frame {frame_count}"
+                    # caption=f"PPE Detection - Frame {frame_count}"
                 )
                 
                 # Hiển thị FPS

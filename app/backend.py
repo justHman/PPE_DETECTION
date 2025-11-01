@@ -56,20 +56,10 @@ class PPEDetector:
         return self.model
     
     def process_frame(self, frame):
-        """
-        Xử lý một frame để detect PPE
-        
-        Args:
-            frame: Frame từ video/camera
-            
-        Returns:
-            processed_frame: Frame đã vẽ bounding box và label
-            fps: FPS hiện tại
-        """
         start_time = time.time()
         
         # Chạy YOLO detection
-        results = self.model(frame, verbose=False)[0]
+        results = self.model(frame, verbose=False, conf=self.conf_threshold)[0]
         
         # Lấy thông tin detection
         boxes = results.boxes.xyxy.cpu().numpy()
@@ -82,9 +72,6 @@ class PPEDetector:
         
         # Phân loại workers và PPE items
         for box, cls_id, conf in zip(boxes, class_ids, confidences):
-            if conf < self.conf_threshold:
-                continue
-                
             label = names[cls_id]
             
             if label.lower() == 'worker':
@@ -100,19 +87,20 @@ class PPEDetector:
                     worker['items'].add(item['label'])
         
         # Vẽ PPE items trước
+        # frame = results.plot()
         for item in items:
-            if item['label'] in self.required_items:
-                x1, y1, x2, y2 = map(int, item['box'])
-                color = get_color(item['label'])
-                cv2.rectangle(frame, (x1, y1), (x2, y2), color, 1)
-                label_text = f"{item['label']} {item['conf']:.2f}"
-                cv2.putText(frame, label_text, (x1, y1 - 8),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.4, color, 1)
+            x1, y1, x2, y2 = map(int, item['box'])
+            color = get_color(item['label'])
+            cv2.rectangle(frame, (x1, y1), (x2, y2), color, 1)
+            label_text = f"{item['label']} {item['conf']:.2f}"
+            cv2.putText(frame, label_text, (x1, y1 - 8),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.4, color, 1)
         
         # Vẽ workers với màu phù hợp
         for worker in workers:
             x1, y1, x2, y2 = map(int, worker['box'])
-            has_all = all(req in worker['items'] for req in self.required_items)
+            has_all = all(req in worker['items'] for req in self.required_items) and \
+                      all(f"no_{req}" not in worker['items'] for req in self.required_items)
             
             # Safe: xanh lá, Unsafe: đỏ
             color = (0, 255, 0) if has_all else (0, 0, 255)
@@ -133,10 +121,6 @@ class PPEDetector:
         # Tính FPS
         end_time = time.time()
         self.fps = 1 / (end_time - start_time) if (end_time - start_time) > 0 else 0
-        
-        # Vẽ FPS lên frame
-        cv2.putText(frame, f"FPS: {self.fps:.1f}", (10, 30),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         
         return frame, self.fps
 

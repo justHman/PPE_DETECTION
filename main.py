@@ -94,7 +94,8 @@ while cap.isOpened():
     # Vẽ lên frame
     for worker in workers:
         x1, y1, x2, y2 = map(int, worker['box'])
-        has_all = all(req in worker['items'] for req in REQUIRED_ITEMS)
+        has_all = all(req in worker['items'] for req in REQUIRED_ITEMS) and \
+                  all(f"no_{req}" not in worker['items'] for req in REQUIRED_ITEMS)
         color = (0, 255, 0) if has_all else (0, 0, 255)
         label_text = f"Worker ({'Safe' if has_all else 'Unsafe'})"
 

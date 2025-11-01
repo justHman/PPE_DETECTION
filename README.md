@@ -20,18 +20,18 @@
 ### Safe Worker Detection
 Worker wearing **helmet** and **vest** ✅
 
-![Safe Worker Demo](data/demos/SAFE.gif)
+*Result: **SAFE** - All required PPE items detected and no "no_*" items present*
 
-*Result: **SAFE** - All required PPE items detected*
+![Safe Worker Demo](data/demos/SAFE.gif)
 
 ---
 
 ### Unsafe Worker Detection
 Worker wearing **helmet** and **vest**, but **missing gloves** ❌
 
-![Unsafe Worker Demo](data/demos/UNSAFE.gif)
+*Result: **UNSAFE** - Missing required PPE items or "no_*" items detected*
 
-*Result: **UNSAFE** - Missing required gloves*
+![Unsafe Worker Demo](data/demos/UNSAFE.gif)
 
 ---
 
@@ -105,11 +105,11 @@ PPE-Detection/
 
 A worker is classified as **SAFE** when:
 - ✅ All selected PPE items are detected within the worker's bounding box
-- ✅ Each item meets the confidence threshold
+- ✅ None of the "no_*" items related to the required PPE are detected
 
 A worker is classified as **UNSAFE** when:
 - ❌ One or more required PPE items are missing
-- ❌ Missing items are displayed below the worker's bounding box
+- ❌ "no_*" items related to the required PPE are detected
 
 ---
 
